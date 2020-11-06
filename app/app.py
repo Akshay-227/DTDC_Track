@@ -50,7 +50,7 @@ def success_table():
                 print("Latest updates are "+rdict['deliveryStatus']+" at " +
                       rdict['origin']+"( "+rdict['activityType']+")")
             df = pandas.DataFrame(rdict, index=[0])
-            df.to_csv("uploads/Tracking_Result.csv")
+            df.to_csv("app/uploads/Tracking_Result.csv")
             print(df)
 
             return render_template("index.html", text=df.to_html(), btn='download.html')
