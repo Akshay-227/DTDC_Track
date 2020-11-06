@@ -11,3 +11,8 @@ Add all your Tracking No. in single CSV file seperated by new line(each line one
 # DTDC_Mass_Tracking <br/>
 Uncomment print and file.write if you want detailed tracking history <br/>
 Turn around time 100 valid records in 50 seconds
+
+## Creating python virtual environment
+1. python -m pip install --user virtualenv
+2. python3 -m venv myenv
+3. .\myenv\Scripts\activate 
