@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<title> DTDC Track </title>
+<head>
+  <link href="../static/main.css" rel="stylesheet">
+</head>
+  <body>
+    <div class="container">
+      <h1>DTDC Track</h1>
+      <h3>Please upload your CSV file. <em>address</em> or <em>Orders</em></h3>
+        <form action="{{url_for('success_table')}}" method="POST" enctype="multipart/form-data">
+          <input type="file" accept=".csv" name="file" />
+          <button type="submit"> Submit </button>
+        </form>
+      <div class="output">
+        {{text|safe}}
+        {% if btn %}
+          {% include btn %}
+        {% endif %}
+      </div>
+  </div>
+  </body>
+</html>
