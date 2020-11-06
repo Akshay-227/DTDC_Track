@@ -1,9 +1,13 @@
+import csv
 from flask import Flask, render_template, request, send_file
 import pandas
 import time
 import requests as r
+import json
 start = time.time()
 app = Flask(__name__)
+file_name = "app/uploads/Tracking_Result.csv"
+result = []
 
 
 @app.route("/")
@@ -24,7 +28,7 @@ def success_table():
         file = request.files['file']
 
         try:
-            df = pandas.read_csv(file.stream)
+            df = pandas.read_csv(file, sep=",")
             for i in df:
                 str(i)
                 track.append(i)
@@ -44,16 +48,22 @@ def success_table():
                         for i in jin:
                             if i in rdict:
                                 rdict[i] = jin[i]
-                    print(rdict['dateWithNoSuffix']+" "+rdict['time']
-                          + " "+rdict['activityType']+" ("+rdict['origin']+") "+rdict['deliveryStatus'])
 
-                print("Latest updates are "+rdict['deliveryStatus']+" at " +
-                      rdict['origin']+"( "+rdict['activityType']+")")
-            df = pandas.DataFrame(rdict, index=[0])
-            df.to_csv("app/uploads/Tracking_Result.csv")
-            print(df)
-
+                result.append(rdict)
+            print(result)
+            csv_col = ['activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
+                       'orgCode',
+                       'mode']
+            try:
+                with open(file_name, 'w') as csvfile:
+                    writer = csv.DictWriter(csvfile, csv_col)
+                    for data in result:
+                        writer.writerow(data)
+            except IOError:
+                print("I/O error")
+            df = pandas.DataFrame(result, columns=csv_col)
             return render_template("index.html", text=df.to_html(), btn='download.html')
+
         except Exception as e:
             return render_template("index.html", text=str(e))
 
