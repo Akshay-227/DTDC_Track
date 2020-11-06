@@ -35,7 +35,7 @@ def success_table():
 
             for i in range(len(track)):
 
-                print("\n"+"Record for  " + track[i])
+                #print("\n"+"Record for  " + track[i])
                 i = track[i]
                 url = "http://track.dtdc.com/ctbs-tracking/customerInterface.tr?submitName=getLoadMovementDetails&cnNo=" + \
                     str(i)
@@ -50,7 +50,7 @@ def success_table():
                                 rdict[i] = jin[i]
 
                 result.append(rdict)
-            print(result)
+            #print(result)
             csv_col = ['activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
                        'orgCode',
                        'mode']
