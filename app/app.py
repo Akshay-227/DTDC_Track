@@ -1,4 +1,5 @@
 import csv
+from os import write
 from flask import Flask, render_template, request, send_file
 import pandas
 import time
@@ -7,7 +8,6 @@ import json
 start = time.time()
 app = Flask(__name__)
 file_name = "app/uploads/Tracking_Result.csv"
-result = []
 
 
 @app.route("/")
@@ -35,7 +35,6 @@ def success_table():
 
             for i in range(len(track)):
 
-                print("\n"+"Record for  " + track[i])
                 i = track[i]
                 url = "http://track.dtdc.com/ctbs-tracking/customerInterface.tr?submitName=getLoadMovementDetails&cnNo=" + \
                     str(i)
@@ -49,20 +48,18 @@ def success_table():
                             if i in rdict:
                                 rdict[i] = jin[i]
 
-                result.append(rdict)
-            print(result)
-            csv_col = ['activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
-                       'orgCode',
-                       'mode']
-            try:
-                with open(file_name, 'w') as csvfile:
-                    writer = csv.DictWriter(csvfile, csv_col)
-                    for data in result:
-                        writer.writerow(data)
-            except IOError:
-                print("I/O error")
-            df = pandas.DataFrame(result, columns=csv_col)
-            return render_template("index.html", text=df.to_html(), btn='download.html')
+                try:
+                    with open(file_name, 'a') as csvfile:
+                        csv_col = ['activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
+                                   'orgCode',
+                                   'mode']
+
+                        writer = csv.DictWriter(csvfile, csv_col)
+                        writer.writerow(rdict)
+                except IOError:
+                    print("I/O error")
+
+            return render_template("index.html", btn='download.html')
 
         except Exception as e:
             return render_template("index.html", text=str(e))
