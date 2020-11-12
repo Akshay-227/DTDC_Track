@@ -12,6 +12,7 @@ file_name = "app/uploads/Tracking_Result.csv"
 
 @app.route("/")
 def index():
+    open(file_name, 'w').close()
     return render_template("index.html")
 
 
@@ -28,33 +29,34 @@ def success_table():
         file = request.files['file']
 
         try:
-            df = pandas.read_csv(file, sep=",")
+            df = pandas.read_csv(file)
             for i in df:
                 str(i)
                 track.append(i)
 
-            for i in range(len(track)):
-
-                i = track[i]
+            for k in range(len(track)):
+                i = track[k]
+                rdict["ID"] = track[k]
                 url = "http://track.dtdc.com/ctbs-tracking/customerInterface.tr?submitName=getLoadMovementDetails&cnNo=" + \
                     str(i)
                 try:
                     data = r.get(url)
                 finally:
+
                     jdata = data.json()
                     jdata.reverse()
                     for jin in jdata:
                         for i in jin:
                             if i in rdict:
                                 rdict[i] = jin[i]
-
                 try:
                     with open(file_name, 'a') as csvfile:
-                        csv_col = ['activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
+                        csv_col = ['ID', 'activityType', 'dateWithNoSuffix', 'deliveryStatus', 'origin', 'time',
                                    'orgCode',
                                    'mode']
 
-                        writer = csv.DictWriter(csvfile, csv_col)
+                        writer = csv.DictWriter(
+                            csvfile, fieldnames=csv_col, extrasaction='ignore')
                         writer.writerow(rdict)
                 except IOError:
                     print("I/O error")
