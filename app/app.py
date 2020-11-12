@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, send_file
 import pandas
 import time
 import requests as r
-import json
 start = time.time()
 app = Flask(__name__)
 file_name = "app/uploads/Tracking_Result.csv"
